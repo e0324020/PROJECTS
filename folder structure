@@ -1,0 +1,14 @@
+PROJECTS/
+├── hospital_readmission/
+│   ├── backend.py
+│   ├── frontend.py
+│   ├── training.py
+│   └── hospital_readmission_dataset (1).csv
+│
+├── lyric_sync_webapp/
+│   ├── index.html
+│   └── script.js
+│
+├── music_hub/
+│   ├── MUSIC HUB implementation
+│   └── MUSIC HUB.docx
