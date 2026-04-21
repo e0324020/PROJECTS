@@ -1,0 +1,261 @@
+HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Gallery</title>
+    <link rel="stylesheet" href="oops.css">
+</head>
+<body>
+ 
+    <header>
+        <h1>Music Gallery</h1>
+        <label for="artist-select">Choose an artist:</label>
+        <select id="artist-select">
+            <option value="" disabled selected>Select an artist</option>
+            <option value="artist1">Artist 1</option>
+            <option value="artist2">Artist 2</option>
+            <option value="artist3">Artist 3</option>
+            <option value="artist4">Artist 4</option>
+            <option value="artist5">Artist 5</option>
+            <option value="artist6">Artist 6</option>
+            <option value="artist7">Artist 7</option>
+            <option value="artist8">Artist 8</option>
+            <option value="artist9">Artist 9</option>
+            <option value="artist10">Artist 10</option>
+        </select>
+    </header>
+
+    <div class="gallery">
+        <!-- Looping Through Artists 1 to 10 -->
+        <div class="album" data-artist="artist1">
+            <img src="D:\summa\ae3c78d485c51675dcbfa1653910ee0c.1000x1000x1.png" alt="Album 1">
+            <p>JUSTIN BIEBER</p>
+            <P>GHOST</P>
+            <audio controls>
+                <source src="song1.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics1" class="lyrics-btn">Show Lyrics</a>
+        </div>
+        <div class="album" data-artist="artist2">
+            <img src="D:\summa\MV5BNmFlOWJkOTUtMzk5Ni00YjcxLTkyZTAtZjg5NmIzMTRkNjZkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Album 2">
+            <p>CHARLIE PUTH</p>
+            <P>WE DONT TALK ANYMORE</P>
+            <audio controls>
+                <source src="song2.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics2" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist3">
+            <img src="D:\summa\cbad795cdb3843247073fac8af76b117.1000x1000x1.png" alt="Album 3">
+            <p>TRAVIS SCOTT</p>
+            <P>WHO?WHAT?</P>
+            <audio controls>
+                <source src="song3.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics3" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist4">
+            <img src="D:\summa\artworks-qiMYWHUGdKjIx8BS-qAorhQ-t1080x1080.jpg"alt="Album 4">
+            <p>TAYLOR SWIFT</p>
+            <P>WILDEST DREAMS</P>
+            <audio controls>
+                <source src="song4.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics4" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist5">
+            <img src="D:\summa\Selena_Gomez_and_Marshmello_Wolves.jpg" alt="Album 5">
+            <p>SELENA GOMEZ</p>
+            <P>WOLVES</P>
+            <audio controls>
+                <source src="song5.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics5" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist6">
+            <img src="D:\summa\ab67616d0000b273806c160566580d6335d1f16c.jpg" alt="Album 6">
+            <p>XXXTENTACION</p>
+            <P>HOPE</P>
+            <audio controls>
+                <source src="song6.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics6" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist7">
+            <img src="D:\summa\artworks-tytpb8oaL5Wb9uIU-4YH59g-t500x500.jpg" alt="Album 7">
+            <p>EMINEM</p>
+            <P>MOCKINGBIRD</P>
+            <audio controls>
+                <source src="song7.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics7" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist8">
+            <img src="D:\summa\artworks-C9Iaa8IBy9cQ064Y-VsPIHg-t500x500.jpg" alt="Album 8">
+            <p>POST MALONE & SWAE LEE</p>
+            <P>SUNFLOWER</P>
+            <audio controls>
+                <source src="song8.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics8" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist9">
+            <img src="D:\summa\a1760939543_10.jpg" alt="Album 9">
+            <p>JASON DERULO</p>
+            <P>SAVAGE LOVE</P>
+            <audio controls>
+                <source src="song9.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics9" class="lyrics-btn">Show Lyrics</a>
+        </div>
+
+        <div class="album" data-artist="artist10">
+            <img src="D:\summa\artworks-000072949032-1fgfx8-t500x500.jpg" alt="Album 10">
+            <p>PASSENGER</p>
+            <P>LET HER GO</P>
+            <audio controls>
+                <source src="song10.mp3" type="audio/mp3">
+            </audio>
+            <a href="#lyrics10" class="lyrics-btn">Show Lyrics</a>
+        </div>
+    </div>
+
+    <!-- Lyrics Modals for Each Artist -->
+    <div id="lyrics1" class="modal">
+        <div class="modal-content"><a href="#" class="close">&times;</a><h2>Lyrics of Song 1</h2><pre><p>Young blood thinks there's always tomorrow
+            I miss your touch on nights when I'm hollow
+            I know you crossed a bridge that I can't follow
+            Since the love that you left is all that I get
+            I want you to know that
+            If I can't be close to you, I'll settle for the ghost of you
+            I miss you more than life (more than life)
+            And if you can't be next to me, your memory is ecstasy
+            I miss you more than life
+            I miss you more than life
+            Young blood thinks there's always tomorrow
+            I need more time, but time can't be borrowed
+            I'd leave it all behind if I could follow
+            Since the love that you left is all that I get
+            I want you to know that
+            If I can't be close to you, I'll settle for the ghost of you
+            I miss you more than life (yeah)
+            And if you can't be next to me, your memory is ecstasy (whoa)
+            I miss you more than life
+            I miss you more than life
+            Whoa-oh-oh
+            Na-na-na
+            More than life, oh
+            So if I can't get close to you, I'll settle for the ghost of you
+            I miss you more than life
+            And if you can't be next to me, your memory is ecstasy
+            I miss you more than life
+            I miss you more than life</p></pre></div>
+    </div>
+
+    <div id="lyrics2" class="modal">
+        <div class="modal-content"><a href="#" class="close">&times;</a><h2>Lyrics of Song 2</h2><p>Here are the lyrics...</p></div>
+    </div>
+
+    <div id="lyrics3" class="modal">
+        <div class="modal-content"><a href="#" class="close">&times;</a><h2>Lyrics of Song 3</h2><p>Here are the lyrics...</p></div>
+    </div>
+</body>
+</html>
+
+CSS:
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+header {
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    font-size: 18px;
+}
+
+/* Updated Gallery Styling for Compact Layout */
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Reduced spacing */
+}
+
+/* Updated Album Box Styling */
+.album {
+    width: 200px; /* Shrunk width */
+    padding: 10px; /* Reduced padding */
+    background-color: white;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    font-size: 12px; /* Smaller font */
+}
+
+/* Smaller Images */
+img {
+    width: 80%; /* Shrunk image size */
+    height: auto;
+}
+
+/* Compact Button */
+.lyrics-btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* Show modal when targeted */
+.modal:target {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Shrunk Modal Content */
+.modal-content {
+    background-color: white;
+    width: 40%; /* Reduced width */
+    padding: 15px; /* Less padding */
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    font-size: 12px; /* Smaller font */
+}
+
+/* Close Button */
+.close {
+    display: block;
+    margin-top: 15px;
+    font-size: 20px; /* Shrunk font */
+    color: black;
+    text-decoration: none;
+}
+
