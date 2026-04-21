@@ -6,9 +6,7 @@ import numpy as np
 
 app = FastAPI()
 
-# -------------------------------
-# Load trained model + scaler + columns
-# -------------------------------
+
 try:
     model = joblib.load("log_model.pkl")
     scaler = joblib.load("scaler.pkl")
@@ -17,9 +15,7 @@ except Exception as e:
     print(f"Model loading error: {e}")
     model, scaler, trained_columns = None, None, None
 
-# -------------------------------
-# Load patient dataset - FIXED: correct filename + correct index column
-# -------------------------------
+
 try:
     patients_df = pd.read_csv("hospital_readmission_dataset (1).csv")
     patients_df["patient_id"] = patients_df["patient_id"].str.strip().str.upper()
@@ -29,9 +25,7 @@ except Exception as e:
     print(f"CSV loading error: {e}")
     patients_df = pd.DataFrame()
 
-# -------------------------------
-# Request schema - FIXED to match actual dataset columns
-# -------------------------------
+
 class PatientData(BaseModel):
     patient_id: str | None = None
     age: int
@@ -48,9 +42,6 @@ class PatientData(BaseModel):
     insurance_type: str = "Medicare"
     discharge_disposition: str = "Home"
 
-# -------------------------------
-# Helper: encode and predict
-# -------------------------------
 CATEGORICAL_COLS = ['season', 'gender', 'region', 'primary_diagnosis',
                     'treatment_type', 'insurance_type', 'discharge_disposition']
 
@@ -68,9 +59,7 @@ def get_risk_level(risk: float) -> str:
         return "MODERATE RISK"
     return "LOW RISK"
 
-# -------------------------------
-# Prediction endpoint
-# -------------------------------
+
 @app.post("/predict")
 def predict_risk(data: PatientData):
     if model is None or scaler is None or trained_columns is None:
@@ -95,9 +84,6 @@ def predict_risk(data: PatientData):
     risk_prob = predict_from_row(row)
     return {"risk": risk_prob, "details": data.dict()}
 
-# -------------------------------
-# Patient lookup endpoint - FIXED
-# -------------------------------
 @app.get("/patient/{patient_id}")
 def get_patient(patient_id: str):
     if patients_df.empty:
@@ -116,7 +102,7 @@ def get_patient(patient_id: str):
     else:
         record["historical_risk_score"] = None
 
-    # Auto-predict using actual patient data
+  
     if model is not None and scaler is not None and trained_columns is not None:
         feature_keys = [c for c in patients_df.columns
                         if c not in ['admission_date', 'label', 'readmission_risk_score']]
@@ -137,9 +123,7 @@ def get_patient(patient_id: str):
 
     return record
 
-# -------------------------------
-# Feature importance endpoint
-# -------------------------------
+
 @app.get("/feature_importance")
 def feature_importance():
     if model is not None and trained_columns is not None:
