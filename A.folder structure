@@ -3,7 +3,7 @@ PROJECTS/
 │   ├── backend.py
 │   ├── frontend.py
 │   ├── training.py
-│   └── hospital_readmission_dataset (1).csv
+│   └── hospital_readmission_dataset.csv
 │
 ├── lyric_sync_webapp/
 │   ├── index.html
@@ -12,3 +12,10 @@ PROJECTS/
 ├── music_hub/
 │   ├── MUSIC HUB implementation
 │   └── MUSIC HUB.docx
+│
+├── kwami_bank/
+│   ├── kwami_bank.cpp
+│   └── kwami_bank_full_app.html
+│
+└── A.folder structure  
+    
