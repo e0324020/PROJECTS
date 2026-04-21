@@ -1,0 +1,693 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a2a4a;--orange:#d35400;--orange-lt:#f0622010;--green:#1a7a4a;--red:#c0392b}
+body{font-family:var(--font-sans);background:var(--color-background-tertiary);min-height:100vh}
+.app{display:grid;grid-template-rows:56px 1fr;min-height:100vh}
+.topbar{background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:10}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;background:var(--orange);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.brand-mark span{color:#fff;font-weight:500;font-size:13px}
+.brand-name{color:#fff;font-size:15px;font-weight:500;letter-spacing:1px}
+.brand-sub{color:rgba(255,255,255,0.4);font-size:11px;margin-left:4px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px 4px 6px}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff}
+.user-pill-name{color:#fff;font-size:12px}
+.btn-logout{background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer}
+.btn-logout:hover{background:rgba(255,255,255,0.15)}
+.layout{display:grid;grid-template-columns:200px 1fr}
+.sidebar{background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);padding:1rem 0}
+.nav-section{font-size:10px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.8px;padding:0 1rem;margin:1rem 0 0.4rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1rem;cursor:pointer;font-size:13px;color:var(--color-text-secondary);border-left:2px solid transparent;transition:all .12s}
+.nav-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.nav-item.active{background:var(--orange-lt);color:var(--orange);border-left:2px solid var(--orange);font-weight:500}
+.nav-icon{width:16px;height:16px;opacity:.6;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.content{padding:1.5rem;overflow:auto}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.25rem}
+.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:1.25rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.metric-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.metric-accent{color:var(--orange)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.tbl th{text-align:left;padding:8px 10px;font-size:11px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl td{padding:10px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
+.badge-s{background:#E6F1FB;color:#0C447C}
+.badge-c{background:#FAEEDA;color:#633806}
+.prog-wrap{background:var(--color-border-tertiary);border-radius:3px;height:5px;overflow:hidden}
+.prog-fill{height:5px;background:var(--orange);border-radius:3px}
+.fld{margin-bottom:.85rem}
+.fld label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.fld input,.fld select{width:100%;padding:9px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;font-family:var(--font-sans)}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--orange)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.btn-main{background:var(--orange);color:#fff;border:none;padding:10px 20px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;width:100%;margin-top:.5rem}
+.btn-main:hover{background:#b84700}
+.btn-ghost{background:var(--color-background-primary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary);padding:10px 20px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;width:100%;margin-top:.5rem}
+.btn-ghost:hover{background:var(--color-background-secondary)}
+.btn-danger{background:var(--color-background-danger);color:var(--color-text-danger);border:0.5px solid var(--color-border-danger);padding:10px 20px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;width:100%;margin-top:.5rem}
+.err-msg{font-size:12px;color:var(--color-text-danger);margin-top:.4rem;display:none}
+.ok-msg{font-size:12px;color:var(--color-text-success);margin-top:.4rem;display:none}
+.tx-pos{color:#1a7a4a;font-weight:500}
+.tx-neg{color:var(--red);font-weight:500}
+.acc-hero{background:var(--navy);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1rem;color:#fff}
+.acc-hero-bal{font-size:30px;font-weight:500;color:#fff;margin:8px 0 4px}
+.acc-hero-sub{font-size:12px;color:rgba(255,255,255,.5)}
+.dream-prog{margin-top:1rem}
+.dream-bar-bg{background:rgba(255,255,255,.15);border-radius:6px;height:8px;overflow:hidden;margin-top:6px}
+.dream-bar-fill{height:8px;background:var(--orange);border-radius:6px}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.action-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--color-text-primary)}
+.action-btn:hover{background:var(--color-background-secondary)}
+.action-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff}
+.modal-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:1.5rem;width:360px;border:0.5px solid var(--color-border-secondary)}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1rem}
+.tx-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tx-item:last-child{border-bottom:none}
+.tx-meta{font-size:13px;color:var(--color-text-primary)}
+.tx-time{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--color-background-tertiary)}
+.login-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem;width:340px}
+.login-logo{text-align:center;margin-bottom:1.5rem}
+.login-logomark{width:44px;height:44px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.login-logomark span{color:#fff;font-size:18px;font-weight:500}
+.login-title{font-size:18px;font-weight:500;color:var(--color-text-primary);text-align:center}
+.login-sub{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-top:4px}
+.role-tabs{display:grid;grid-template-columns:1fr 1fr;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:1.25rem}
+.role-tab{padding:9px;text-align:center;font-size:13px;cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary)}
+.role-tab.active{background:var(--navy);color:#fff}
+.confirm-strip{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:var(--color-text-warning);margin-bottom:.75rem}
+.delete-row{display:flex;gap:8px;align-items:flex-end}
+.transfer-arrow{text-align:center;font-size:18px;color:var(--color-text-secondary);padding:.5rem 0}
+</style>
+
+<div style="position:relative;min-height:600px" id="root">
+
+<div id="login-screen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logomark"><span>K</span></div>
+      <div class="login-title">Kwami Bank</div>
+      <div class="login-sub">Secure portal access</div>
+    </div>
+    <div class="role-tabs">
+      <div class="role-tab active" id="tab-admin" onclick="setRole('admin')">Admin</div>
+      <div class="role-tab" id="tab-cust" onclick="setRole('cust')">Customer</div>
+    </div>
+    <div id="login-admin-fields">
+      <div class="fld"><label>Admin password</label><input type="password" id="l-pass" placeholder="Enter password"/></div>
+      <p class="err-msg" id="l-err-admin">Incorrect password</p>
+      <button class="btn-main" onclick="doAdminLogin()">Sign in as admin</button>
+      <p style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;text-align:center">Demo password: admin123</p>
+    </div>
+    <div id="login-cust-fields" style="display:none">
+      <div class="fld"><label>Account number</label><input type="text" id="l-acc" placeholder="12-digit account number" maxlength="12"/></div>
+      <div class="fld"><label>PIN</label><input type="password" id="l-pin" placeholder="4-digit PIN" maxlength="4"/></div>
+      <p class="err-msg" id="l-err-cust">Invalid credentials</p>
+      <button class="btn-main" onclick="doCustLogin()">Sign in</button>
+      <p style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;text-align:center">Demo: 123456789012 / 1234</p>
+    </div>
+  </div>
+</div>
+
+<div id="main-app" style="display:none" class="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-mark"><span>K</span></div>
+      <span class="brand-name">KWAMI BANK</span>
+      <span class="brand-sub" id="top-role-label">Admin</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="user-avatar" id="top-avatar">A</div>
+        <span class="user-pill-name" id="top-username">Admin</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="sidebar" id="sidebar">
+      <div id="admin-nav">
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" onclick="nav('dash',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-section">Accounts</div>
+        <div class="nav-item" onclick="nav('all-accounts',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          All accounts
+        </div>
+        <div class="nav-item" onclick="nav('create-account',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6"/><path d="M12 10v4M10 12h4"/></svg>
+          Create account
+        </div>
+        <div class="nav-item" onclick="nav('delete-account',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,4 14,4"/><path d="M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10"/></svg>
+          Delete account
+        </div>
+        <div class="nav-section">Operations</div>
+        <div class="nav-item" onclick="nav('deposit-withdraw',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14"/><circle cx="5" cy="11" r="1"/></svg>
+          Deposit / Withdraw
+        </div>
+        <div class="nav-item" onclick="nav('transfer',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h12M10 2l4 3-4 3M14 11H2M6 8l-4 3 4 3"/></svg>
+          Transfer funds
+        </div>
+        <div class="nav-item" onclick="nav('txn-history',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2z"/><path d="M5 6h6M5 9h4"/></svg>
+          Transactions
+        </div>
+      </div>
+      <div id="cust-nav" style="display:none">
+        <div class="nav-section">My account</div>
+        <div class="nav-item active" onclick="nav('cust-dash',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          Overview
+        </div>
+        <div class="nav-item" onclick="nav('cust-deposit',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14"/><path d="M8 10v-3M6.5 8.5L8 10l1.5-1.5"/></svg>
+          Deposit
+        </div>
+        <div class="nav-item" onclick="nav('cust-withdraw',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14"/><path d="M8 7v3M6.5 8.5L8 7l1.5 1.5"/></svg>
+          Withdraw
+        </div>
+        <div class="nav-item" onclick="nav('cust-txns',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2z"/><path d="M5 6h6M5 9h4"/></svg>
+          My transactions
+        </div>
+      </div>
+    </div>
+
+    <div class="content" id="content-area">
+
+      <div class="page active" id="page-dash">
+        <div class="page-title">Dashboard</div>
+        <div class="metric-grid">
+          <div class="metric"><div class="metric-label">Total accounts</div><div class="metric-val metric-accent" id="m-count">0</div></div>
+          <div class="metric"><div class="metric-label">Total deposits</div><div class="metric-val metric-accent" id="m-total">$0</div></div>
+          <div class="metric"><div class="metric-label">Avg balance</div><div class="metric-val metric-accent" id="m-avg">$0</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Account summary</div>
+          <table class="tbl">
+            <thead><tr><th style="width:22%">Acc no</th><th style="width:22%">Name</th><th style="width:10%">Type</th><th style="width:14%">Balance</th><th style="width:18%">Dream goal</th><th style="width:14%">Progress</th></tr></thead>
+            <tbody id="dash-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-all-accounts">
+        <div class="page-title">All accounts</div>
+        <div class="card">
+          <table class="tbl">
+            <thead><tr><th style="width:20%">Acc no</th><th style="width:18%">Name</th><th style="width:9%">Type</th><th style="width:12%">Balance</th><th style="width:9%">PIN</th><th style="width:16%">Dream</th><th style="width:8%">Cost</th><th style="width:8%">Progress</th></tr></thead>
+            <tbody id="all-acc-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-create-account">
+        <div class="page-title">Create account</div>
+        <div class="card" style="max-width:540px">
+          <div class="card-title">New account details</div>
+          <div class="form-grid">
+            <div class="fld"><label>Account number (12 digits)</label><input type="text" id="ca-acc" maxlength="12" placeholder="e.g. 112233445566"/></div>
+            <div class="fld"><label>Holder name</label><input type="text" id="ca-name" placeholder="Full name"/></div>
+            <div class="fld"><label>Account type</label>
+              <select id="ca-type"><option value="S">Saving</option><option value="C">Current</option></select>
+            </div>
+            <div class="fld"><label>Initial deposit (min $500)</label><input type="number" id="ca-dep" placeholder="500" min="500"/></div>
+            <div class="fld"><label>4-digit PIN</label><input type="password" id="ca-pin" maxlength="4" placeholder="••••"/></div>
+            <div class="fld"><label>Dream goal</label><input type="text" id="ca-dream" placeholder="e.g. New car"/></div>
+            <div class="fld" style="grid-column:span 2"><label>Dream estimated cost ($)</label><input type="number" id="ca-dcost" placeholder="10000"/></div>
+          </div>
+          <p class="err-msg" id="ca-err">—</p>
+          <p class="ok-msg" id="ca-ok">Account created successfully.</p>
+          <button class="btn-main" onclick="createAccount()">Create account</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-delete-account">
+        <div class="page-title">Delete account</div>
+        <div class="card" style="max-width:480px">
+          <div class="card-title">Remove account from system</div>
+          <div class="confirm-strip" id="del-confirm" style="display:none"></div>
+          <div class="fld"><label>Account number</label>
+            <div class="delete-row">
+              <input type="text" id="del-acc" placeholder="12-digit account number" maxlength="12" style="flex:1"/>
+              <button class="btn-ghost" style="width:auto;margin:0" onclick="lookupDelete()">Look up</button>
+            </div>
+          </div>
+          <div id="del-preview" style="display:none">
+            <div class="fld"><label>Found account</label>
+              <div style="padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px" id="del-preview-text"></div>
+            </div>
+            <button class="btn-danger" onclick="deleteAccount()">Confirm delete</button>
+          </div>
+          <p class="err-msg" id="del-err">Account not found</p>
+          <p class="ok-msg" id="del-ok">Account deleted.</p>
+        </div>
+      </div>
+
+      <div class="page" id="page-deposit-withdraw">
+        <div class="page-title">Deposit / Withdraw</div>
+        <div class="card" style="max-width:480px">
+          <div class="card-title">Admin transaction</div>
+          <div class="fld"><label>Account number</label>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="dw-acc" placeholder="12-digit" maxlength="12" style="flex:1"/>
+              <button class="btn-ghost" style="width:auto;margin:0" onclick="lookupDW()">Find</button>
+            </div>
+          </div>
+          <div id="dw-found" style="display:none">
+            <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:13px;margin-bottom:.75rem" id="dw-info"></div>
+            <div class="fld"><label>Operation</label>
+              <select id="dw-op"><option value="dep">Deposit</option><option value="wd">Withdraw</option></select>
+            </div>
+            <div class="fld"><label>Amount ($)</label><input type="number" id="dw-amt" placeholder="0" min="1"/></div>
+          </div>
+          <p class="err-msg" id="dw-err">—</p>
+          <p class="ok-msg" id="dw-ok">Transaction completed.</p>
+          <button class="btn-main" id="dw-btn" onclick="doDepWd()" style="display:none">Execute transaction</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-transfer">
+        <div class="page-title">Transfer funds</div>
+        <div class="card" style="max-width:480px">
+          <div class="card-title">Account to account transfer</div>
+          <div class="fld"><label>From account number</label><input type="text" id="tr-from" placeholder="Sender 12-digit" maxlength="12"/></div>
+          <div class="transfer-arrow">↓</div>
+          <div class="fld"><label>To account number</label><input type="text" id="tr-to" placeholder="Receiver 12-digit" maxlength="12"/></div>
+          <div class="fld"><label>Amount ($)</label><input type="number" id="tr-amt" placeholder="0" min="1"/></div>
+          <p class="err-msg" id="tr-err">—</p>
+          <p class="ok-msg" id="tr-ok">Transfer successful.</p>
+          <button class="btn-main" onclick="doTransfer()">Transfer now</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-txn-history">
+        <div class="page-title">Transaction history</div>
+        <div class="card">
+          <div style="display:flex;gap:8px;margin-bottom:1rem">
+            <input type="text" id="txn-filter" placeholder="Filter by account number..." style="flex:1;padding:8px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px" oninput="renderTxnHistory()"/>
+          </div>
+          <table class="tbl">
+            <thead><tr><th style="width:22%">Account</th><th style="width:18%">Type</th><th style="width:15%">Amount</th><th style="width:18%">Balance after</th><th style="width:27%">Time</th></tr></thead>
+            <tbody id="txn-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="page" id="page-cust-dash">
+        <div class="page-title" id="cust-welcome">Welcome back</div>
+        <div class="acc-hero">
+          <div style="font-size:12px;color:rgba(255,255,255,.5)">Current balance</div>
+          <div class="acc-hero-bal" id="hero-bal">$0</div>
+          <div class="acc-hero-sub" id="hero-accno">—</div>
+          <div class="dream-prog">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.6)">
+              <span id="hero-dream">Dream goal</span>
+              <span id="hero-pct">0%</span>
+            </div>
+            <div class="dream-bar-bg"><div class="dream-bar-fill" id="hero-bar" style="width:0%"></div></div>
+            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px" id="hero-dream-status">—</div>
+          </div>
+        </div>
+        <div class="action-grid">
+          <div class="action-btn" onclick="nav('cust-deposit',document.querySelector('#cust-nav .nav-item:nth-child(3)'))">
+            <div class="action-icon" style="background:#1a7a4a">+</div>
+            <div><div style="font-weight:500;font-size:13px">Deposit</div><div style="font-size:11px;color:var(--color-text-secondary)">Add funds</div></div>
+          </div>
+          <div class="action-btn" onclick="nav('cust-withdraw',document.querySelector('#cust-nav .nav-item:nth-child(4)'))">
+            <div class="action-icon" style="background:#c0392b">−</div>
+            <div><div style="font-weight:500;font-size:13px">Withdraw</div><div style="font-size:11px;color:var(--color-text-secondary)">Take out funds</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent transactions</div>
+          <div id="cust-recent-txns"><div style="text-align:center;padding:1.5rem;color:var(--color-text-secondary);font-size:13px">No transactions yet</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-cust-deposit">
+        <div class="page-title">Deposit money</div>
+        <div class="card" style="max-width:400px">
+          <div class="card-title">Add funds to your account</div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;margin-bottom:1rem">
+            Current balance: <strong id="cd-bal">$0</strong>
+          </div>
+          <div class="fld"><label>Deposit amount ($)</label><input type="number" id="cd-amt" placeholder="0" min="1"/></div>
+          <p class="err-msg" id="cd-err">—</p>
+          <p class="ok-msg" id="cd-ok">Deposit successful!</p>
+          <button class="btn-main" onclick="custDeposit()">Deposit</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-cust-withdraw">
+        <div class="page-title">Withdraw money</div>
+        <div class="card" style="max-width:400px">
+          <div class="card-title">Withdraw from your account</div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;margin-bottom:1rem">
+            Available balance: <strong id="cw-bal">$0</strong>
+          </div>
+          <div class="fld"><label>Withdrawal amount ($)</label><input type="number" id="cw-amt" placeholder="0" min="1"/></div>
+          <p class="err-msg" id="cw-err">—</p>
+          <p class="ok-msg" id="cw-ok">Withdrawal successful!</p>
+          <button class="btn-main" onclick="custWithdraw()">Withdraw</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-cust-txns">
+        <div class="page-title">My transactions</div>
+        <div class="card">
+          <table class="tbl">
+            <thead><tr><th style="width:25%">Type</th><th style="width:20%">Amount</th><th style="width:22%">Balance after</th><th style="width:33%">Time</th></tr></thead>
+            <tbody id="cust-txn-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+let accounts = JSON.parse(localStorage.getItem('kb2_accounts')||'null');
+if(!accounts){
+  accounts=[
+    {accNo:'123456789012',name:'Kwame Asante',type:'S',balance:3200,pin:'1234',dream:'Trip to Paris',dreamCost:5000},
+    {accNo:'987654321098',name:'Afia Mensah',type:'C',balance:8750,pin:'5678',dream:'New laptop',dreamCost:2000},
+    {accNo:'456789012345',name:'Kofi Boateng',type:'S',balance:1100,pin:'4321',dream:'New car',dreamCost:15000}
+  ];
+  saveAcc();
+}
+let txns=JSON.parse(localStorage.getItem('kb2_txns')||'[]');
+let currentUser=null;
+let isAdmin=false;
+
+function saveAcc(){localStorage.setItem('kb2_accounts',JSON.stringify(accounts));}
+function saveTxns(){localStorage.setItem('kb2_txns',JSON.stringify(txns));}
+function rec(accNo,type,amount,bal){
+  txns.push({accNo,type,amount,bal,time:new Date().toLocaleString('en-US',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false})});
+  saveTxns();
+}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function pct(a){return Math.min(100,Math.round(a.balance*100/a.dreamCost));}
+
+function setRole(r){
+  document.getElementById('tab-admin').className='role-tab'+(r==='admin'?' active':'');
+  document.getElementById('tab-cust').className='role-tab'+(r==='cust'?' active':'');
+  document.getElementById('login-admin-fields').style.display=r==='admin'?'block':'none';
+  document.getElementById('login-cust-fields').style.display=r==='cust'?'block':'none';
+}
+
+function doAdminLogin(){
+  const p=document.getElementById('l-pass').value;
+  const e=document.getElementById('l-err-admin');
+  if(p==='admin123'){e.style.display='none';isAdmin=true;launchApp();}
+  else{e.style.display='block';}
+}
+function doCustLogin(){
+  const a=document.getElementById('l-acc').value.trim();
+  const p=document.getElementById('l-pin').value.trim();
+  const e=document.getElementById('l-err-cust');
+  const user=accounts.find(x=>x.accNo===a&&x.pin===p);
+  if(user){e.style.display='none';isAdmin=false;currentUser=user;launchApp();}
+  else{e.style.display='block';}
+}
+
+function launchApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='grid';
+  if(isAdmin){
+    document.getElementById('top-role-label').textContent='Admin portal';
+    document.getElementById('top-username').textContent='Admin';
+    document.getElementById('top-avatar').textContent='A';
+    document.getElementById('admin-nav').style.display='block';
+    document.getElementById('cust-nav').style.display='none';
+    renderDash();nav('dash',document.querySelector('#admin-nav .nav-item'));
+  } else {
+    const initials=currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('top-role-label').textContent='Customer portal';
+    document.getElementById('top-username').textContent=currentUser.name.split(' ')[0];
+    document.getElementById('top-avatar').textContent=initials;
+    document.getElementById('admin-nav').style.display='none';
+    document.getElementById('cust-nav').style.display='block';
+    renderCustDash();nav('cust-dash',document.querySelector('#cust-nav .nav-item'));
+  }
+}
+
+function doLogout(){
+  currentUser=null;isAdmin=false;
+  document.getElementById('l-pass').value='';
+  document.getElementById('l-acc').value='';
+  document.getElementById('l-pin').value='';
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-err-admin').style.display='none';
+  document.getElementById('l-err-cust').style.display='none';
+  setRole('admin');
+}
+
+function nav(pageId,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+pageId);
+  if(pg)pg.classList.add('active');
+  if(el)el.classList.add('active');
+  if(pageId==='dash')renderDash();
+  if(pageId==='all-accounts')renderAllAcc();
+  if(pageId==='txn-history')renderTxnHistory();
+  if(pageId==='cust-dash')renderCustDash();
+  if(pageId==='cust-deposit'){document.getElementById('cd-bal').textContent=fmt(currentUser.balance);document.getElementById('cd-ok').style.display='none';document.getElementById('cd-err').style.display='none';document.getElementById('cd-amt').value='';}
+  if(pageId==='cust-withdraw'){document.getElementById('cw-bal').textContent=fmt(currentUser.balance);document.getElementById('cw-ok').style.display='none';document.getElementById('cw-err').style.display='none';document.getElementById('cw-amt').value='';}
+  if(pageId==='cust-txns')renderCustTxns();
+  if(pageId==='deposit-withdraw'){document.getElementById('dw-found').style.display='none';document.getElementById('dw-btn').style.display='none';document.getElementById('dw-err').style.display='none';document.getElementById('dw-ok').style.display='none';document.getElementById('dw-acc').value='';}
+  if(pageId==='delete-account'){document.getElementById('del-preview').style.display='none';document.getElementById('del-err').style.display='none';document.getElementById('del-ok').style.display='none';document.getElementById('del-confirm').style.display='none';document.getElementById('del-acc').value='';}
+  if(pageId==='transfer'){['tr-err','tr-ok'].forEach(id=>{document.getElementById(id).style.display='none';});['tr-from','tr-to','tr-amt'].forEach(id=>{document.getElementById(id).value='';});}
+  if(pageId==='create-account'){['ca-err','ca-ok'].forEach(id=>{document.getElementById(id).style.display='none';});['ca-acc','ca-name','ca-dep','ca-pin','ca-dream','ca-dcost'].forEach(id=>{document.getElementById(id).value='';});}
+}
+
+function renderDash(){
+  const total=accounts.reduce((s,a)=>s+a.balance,0);
+  document.getElementById('m-count').textContent=accounts.length;
+  document.getElementById('m-total').textContent=fmt(total);
+  document.getElementById('m-avg').textContent=accounts.length?fmt(total/accounts.length):'$0';
+  document.getElementById('dash-tbody').innerHTML=accounts.map(a=>{
+    const p=pct(a);
+    return`<tr><td>${a.accNo}</td><td>${a.name}</td><td><span class="badge badge-${a.type.toLowerCase()}">${a.type==='S'?'Saving':'Current'}</span></td><td>${fmt(a.balance)}</td><td>${a.dream}</td><td><div class="prog-wrap"><div class="prog-fill" style="width:${p}%"></div></div><span style="font-size:11px;color:var(--color-text-secondary)">${p}%</span></td></tr>`;
+  }).join('')||'<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--color-text-secondary);font-size:13px">No accounts</td></tr>';
+}
+
+function renderAllAcc(){
+  document.getElementById('all-acc-tbody').innerHTML=accounts.map(a=>{
+    const p=pct(a);
+    return`<tr><td>${a.accNo}</td><td>${a.name}</td><td><span class="badge badge-${a.type.toLowerCase()}">${a.type==='S'?'S':'C'}</span></td><td>${fmt(a.balance)}</td><td style="font-family:var(--font-mono);letter-spacing:2px">••••</td><td>${a.dream}</td><td>${fmt(a.dreamCost)}</td><td><div class="prog-wrap"><div class="prog-fill" style="width:${p}%"></div></div><span style="font-size:10px;color:var(--color-text-secondary)">${p}%</span></td></tr>`;
+  }).join('')||'<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--color-text-secondary)">No accounts</td></tr>';
+}
+
+function renderTxnHistory(){
+  const filter=document.getElementById('txn-filter').value.trim();
+  const data=[...txns].reverse().filter(t=>!filter||t.accNo.includes(filter));
+  document.getElementById('txn-tbody').innerHTML=data.map(t=>{
+    const pos=t.type==='Deposit'||t.type==='Transfer In'||t.type==='Account Open';
+    return`<tr><td>${t.accNo}</td><td>${t.type}</td><td class="${pos?'tx-pos':'tx-neg'}">${pos?'+':'-'}${fmt(t.amount)}</td><td>${fmt(t.bal)}</td><td>${t.time}</td></tr>`;
+  }).join('')||'<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--color-text-secondary)">No transactions</td></tr>';
+}
+
+function createAccount(){
+  const acc=document.getElementById('ca-acc').value.trim();
+  const name=document.getElementById('ca-name').value.trim();
+  const type=document.getElementById('ca-type').value;
+  const dep=parseInt(document.getElementById('ca-dep').value)||0;
+  const pin=document.getElementById('ca-pin').value.trim();
+  const dream=document.getElementById('ca-dream').value.trim();
+  const dcost=parseInt(document.getElementById('ca-dcost').value)||0;
+  const err=document.getElementById('ca-err');
+  const ok=document.getElementById('ca-ok');
+  ok.style.display='none';
+  function showErr(m){err.style.display='block';err.textContent=m;}
+  if(!/^\d{12}$/.test(acc)){showErr('Account number must be exactly 12 digits.');return;}
+  if(!name){showErr('Holder name is required.');return;}
+  if(dep<500){showErr('Initial deposit must be at least $500.');return;}
+  if(!/^\d{4}$/.test(pin)){showErr('PIN must be exactly 4 digits.');return;}
+  if(!dream){showErr('Dream goal is required.');return;}
+  if(dcost<=0){showErr('Dream cost must be positive.');return;}
+  if(accounts.find(a=>a.accNo===acc)){showErr('Account number already exists.');return;}
+  err.style.display='none';
+  accounts.push({accNo:acc,name,type,balance:dep,pin,dream,dreamCost:dcost});
+  saveAcc();
+  rec(acc,'Account Open',dep,dep);
+  ok.style.display='block';
+  ['ca-acc','ca-name','ca-dep','ca-pin','ca-dream','ca-dcost'].forEach(id=>{document.getElementById(id).value='';});
+}
+
+function lookupDelete(){
+  const acc=document.getElementById('del-acc').value.trim();
+  const a=accounts.find(x=>x.accNo===acc);
+  const err=document.getElementById('del-err');
+  const preview=document.getElementById('del-preview');
+  const confirm=document.getElementById('del-confirm');
+  document.getElementById('del-ok').style.display='none';
+  if(!a){err.style.display='block';preview.style.display='none';confirm.style.display='none';return;}
+  err.style.display='none';
+  document.getElementById('del-preview-text').textContent=`${a.name} — ${a.accNo} — ${fmt(a.balance)} (${a.type==='S'?'Saving':'Current'})`;
+  confirm.textContent='Warning: This action is permanent and cannot be undone.';
+  confirm.style.display='block';
+  preview.style.display='block';
+}
+
+function deleteAccount(){
+  const acc=document.getElementById('del-acc').value.trim();
+  const idx=accounts.findIndex(x=>x.accNo===acc);
+  if(idx===-1)return;
+  rec(acc,'Account Closed',0,0);
+  accounts.splice(idx,1);
+  saveAcc();
+  document.getElementById('del-preview').style.display='none';
+  document.getElementById('del-confirm').style.display='none';
+  document.getElementById('del-ok').style.display='block';
+  document.getElementById('del-acc').value='';
+}
+
+function lookupDW(){
+  const acc=document.getElementById('dw-acc').value.trim();
+  const a=accounts.find(x=>x.accNo===acc);
+  const found=document.getElementById('dw-found');
+  const btn=document.getElementById('dw-btn');
+  const err=document.getElementById('dw-err');
+  document.getElementById('dw-ok').style.display='none';
+  if(!a){err.style.display='block';err.textContent='Account not found.';found.style.display='none';btn.style.display='none';return;}
+  err.style.display='none';
+  document.getElementById('dw-info').textContent=`${a.name} — ${fmt(a.balance)} balance`;
+  found.style.display='block';
+  btn.style.display='block';
+}
+
+function doDepWd(){
+  const acc=document.getElementById('dw-acc').value.trim();
+  const op=document.getElementById('dw-op').value;
+  const amt=parseInt(document.getElementById('dw-amt').value)||0;
+  const err=document.getElementById('dw-err');
+  const ok=document.getElementById('dw-ok');
+  ok.style.display='none';
+  if(amt<=0){err.style.display='block';err.textContent='Enter a positive amount.';return;}
+  const idx=accounts.findIndex(x=>x.accNo===acc);
+  if(idx===-1){err.style.display='block';err.textContent='Account not found.';return;}
+  if(op==='wd'&&amt>accounts[idx].balance){err.style.display='block';err.textContent=`Insufficient balance. Available: ${fmt(accounts[idx].balance)}`;return;}
+  err.style.display='none';
+  if(op==='dep')accounts[idx].balance+=amt;
+  else accounts[idx].balance-=amt;
+  saveAcc();
+  rec(acc,op==='dep'?'Deposit':'Withdraw',amt,accounts[idx].balance);
+  document.getElementById('dw-info').textContent=`${accounts[idx].name} — ${fmt(accounts[idx].balance)} balance`;
+  ok.style.display='block';
+  document.getElementById('dw-amt').value='';
+}
+
+function doTransfer(){
+  const from=document.getElementById('tr-from').value.trim();
+  const to=document.getElementById('tr-to').value.trim();
+  const amt=parseInt(document.getElementById('tr-amt').value)||0;
+  const err=document.getElementById('tr-err');
+  const ok=document.getElementById('tr-ok');
+  ok.style.display='none';
+  function showErr(m){err.style.display='block';err.textContent=m;}
+  if(from===to){showErr('Cannot transfer to the same account.');return;}
+  if(amt<=0){showErr('Enter a positive amount.');return;}
+  const si=accounts.findIndex(x=>x.accNo===from);
+  const ri=accounts.findIndex(x=>x.accNo===to);
+  if(si===-1){showErr('Sender account not found.');return;}
+  if(ri===-1){showErr('Receiver account not found.');return;}
+  if(accounts[si].balance<amt){showErr(`Insufficient funds. Available: ${fmt(accounts[si].balance)}`);return;}
+  err.style.display='none';
+  accounts[si].balance-=amt;
+  accounts[ri].balance+=amt;
+  saveAcc();
+  rec(from,'Transfer Out',amt,accounts[si].balance);
+  rec(to,'Transfer In',amt,accounts[ri].balance);
+  ok.style.display='block';
+  ['tr-from','tr-to','tr-amt'].forEach(id=>{document.getElementById(id).value='';});
+}
+
+function renderCustDash(){
+  const a=accounts.find(x=>x.accNo===currentUser.accNo);
+  if(a)currentUser=a;
+  document.getElementById('cust-welcome').textContent='Welcome back, '+currentUser.name.split(' ')[0];
+  document.getElementById('hero-bal').textContent=fmt(currentUser.balance);
+  document.getElementById('hero-accno').textContent='Account '+currentUser.accNo+' · '+(currentUser.type==='S'?'Saving':'Current');
+  document.getElementById('hero-dream').textContent=currentUser.dream+' — target '+fmt(currentUser.dreamCost);
+  const p=pct(currentUser);
+  document.getElementById('hero-pct').textContent=p+'%';
+  document.getElementById('hero-bar').style.width=p+'%';
+  document.getElementById('hero-dream-status').textContent=p>=100?'Goal achieved!':'$'+Math.round(currentUser.dreamCost-currentUser.balance).toLocaleString()+' more to go';
+  const myTxns=txns.filter(t=>t.accNo===currentUser.accNo).slice(-5).reverse();
+  document.getElementById('cust-recent-txns').innerHTML=myTxns.length?myTxns.map(t=>{
+    const pos=t.type==='Deposit'||t.type==='Transfer In'||t.type==='Account Open';
+    return`<div class="tx-item"><div><div class="tx-meta">${t.type}</div><div class="tx-time">${t.time}</div></div><div class="${pos?'tx-pos':'tx-neg'}">${pos?'+':'-'}${fmt(t.amount)}</div></div>`;
+  }).join(''):'<div style="text-align:center;padding:1.5rem;color:var(--color-text-secondary);font-size:13px">No transactions yet</div>';
+}
+
+function custDeposit(){
+  const amt=parseInt(document.getElementById('cd-amt').value)||0;
+  const err=document.getElementById('cd-err');
+  const ok=document.getElementById('cd-ok');
+  ok.style.display='none';
+  if(amt<=0){err.style.display='block';err.textContent='Enter a positive amount.';return;}
+  err.style.display='none';
+  const idx=accounts.findIndex(x=>x.accNo===currentUser.accNo);
+  accounts[idx].balance+=amt;
+  saveAcc();
+  rec(currentUser.accNo,'Deposit',amt,accounts[idx].balance);
+  currentUser=accounts[idx];
+  document.getElementById('cd-bal').textContent=fmt(currentUser.balance);
+  document.getElementById('cd-amt').value='';
+  ok.style.display='block';
+}
+
+function custWithdraw(){
+  const amt=parseInt(document.getElementById('cw-amt').value)||0;
+  const err=document.getElementById('cw-err');
+  const ok=document.getElementById('cw-ok');
+  ok.style.display='none';
+  if(amt<=0){err.style.display='block';err.textContent='Enter a positive amount.';return;}
+  const idx=accounts.findIndex(x=>x.accNo===currentUser.accNo);
+  if(amt>accounts[idx].balance){err.style.display='block';err.textContent=`Insufficient balance. Available: ${fmt(accounts[idx].balance)}`;return;}
+  err.style.display='none';
+  accounts[idx].balance-=amt;
+  saveAcc();
+  rec(currentUser.accNo,'Withdraw',amt,accounts[idx].balance);
+  currentUser=accounts[idx];
+  document.getElementById('cw-bal').textContent=fmt(currentUser.balance);
+  document.getElementById('cw-amt').value='';
+  ok.style.display='block';
+}
+
+function renderCustTxns(){
+  const myTxns=txns.filter(t=>t.accNo===currentUser.accNo).reverse();
+  document.getElementById('cust-txn-tbody').innerHTML=myTxns.length?myTxns.map(t=>{
+    const pos=t.type==='Deposit'||t.type==='Transfer In'||t.type==='Account Open';
+    return`<tr><td>${t.type}</td><td class="${pos?'tx-pos':'tx-neg'}">${pos?'+':'-'}${fmt(t.amount)}</td><td>${fmt(t.bal)}</td><td>${t.time}</td></tr>`;
+  }).join(''):'<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--color-text-secondary)">No transactions yet</td></tr>';
+}
+
+document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doAdminLogin();});
+document.getElementById('l-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doCustLogin();});
+</script>
